@@ -1,0 +1,16 @@
+language: python
+python:
+  - 2.7
+before_install:
+  - sudo pip install pytest
+  - sudo apt-get install samtools
+install: true
+script:
+- deactivate
+- wget https://wiki.dnanexus.com/images/files/dx-toolkit-current-ubuntu-12.04-amd64.tar.gz
+- tar zxf dx-toolkit-current-ubuntu-12.04-amd64.tar.gz
+- source dx-toolkit/environment
+- python run_tests.py --project_id project-BgKPX680Y028gX2xxVYzvy7b --commit_range $TRAVIS_COMMIT_RANGE
+env:
+  global:
+  - secure: "Uxpj2pCZ4PcLkrHFqOv66WQ+IfNl7VgfOVi3T3PRxpm650U0DgSLzotX+JdgxGH8OfD8900o+uWUNQ8PF/jYsfNvIzT1wbR1dOmZ35zDJZddzMvGKRYA5lowf9jF3cMqNTOU+okZZUEkNJXhbpm8CEaIbZhXye4iVqb53N4T3KaGhIU4hQBoHu/pLs35pp0WHMPX9wwKnOcXiH/c7FglcEheIl+jpcXxw30BKt8RXXWYFwEWwhHVqeATOabhH4LUn3GxcGEo2J/Pxv05Jvia0OzlfQ5sPn/DGi2VHvNv+hC5gmeCFFH59KqKUuJsufGVorIwtWNZnWwIXFbr6sHMqMUB9zaMDI6gDHCdfbw91Fog0fDAhgqE/QOY4zZJzDh8WHrx2fdZhW7qOp5MDO34zR1/H1eqZKyPCoqc3NZaaTaA+vzoHOm6HyZYK7odGa4t4kx/p3aGC9ZqO39RBVVXjSNnC1IOJIJfuYgfX1s1smtaEUCzRkl42xFCnDMz2buBmxKBVu5TW9PzKQyQ7k9ED1BQfLPeX1SGu1+6DL3aU0b7M9BlrzupvjpLBtYgbenAs1eNl6VnyQbQPJPupJJOKWBW5syHt8mJ2/fXpZYR6dzo8PEat904MRPbgEVAGCQqLfRu7n1gWZoIZiTqqdBBoeaoUuB3XAtUEcFliDGHDy8="
