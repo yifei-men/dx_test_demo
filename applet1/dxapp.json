@@ -1,0 +1,32 @@
+{
+  "name": "applet1",
+  "title": "Applet One",
+  "summary": "applet1",
+  "dxapi": "1.0.0",
+  "version": "0.0.1",
+  "categories": [],
+  "inputSpec": [
+    {
+      "name": "fastq",
+      "label": "FASTQ",
+      "class": "file",
+      "optional": false
+    },
+    {
+      "name": "genomeindex_targz",
+      "label": "Genome index",
+      "class": "file"
+    }
+  ],
+  "outputSpec": [
+    {
+      "name": "bam",
+      "label": "BAM",
+      "class": "file"
+    }
+  ],
+  "runSpec": {
+    "interpreter": "bash",
+    "file": "src/applet1.sh"
+  }
+}

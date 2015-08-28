@@ -1,0 +1,39 @@
+import json
+import os
+import subprocess
+
+import dxpy
+
+# These files are stored in the test project.
+SAMPLE_FASTQ = "file-BQbXKk80fPFj4Jbfpxb6Ffv2"
+HS37D5_BWA_INDEX = "file-B6ZY4942J35xX095VZyQBk0v"
+
+def test_alignment_count(applet_id, project_id, folder, tmpdir):
+    """Run BWA on a FASTQ file and verify that the number of
+    alignments produced is correct.
+    """
+
+    # Recall that applet_id is set in the associated conftest.py, which either
+    # gets it from the command line or builds the applet and retrieves its id.
+
+    # And tmpdir is some pytest magic. It's type is py.path.local.LocalPath.
+    # It's strpath property just returns a string.
+
+    applet = dxpy.DXApplet(applet_id)
+    input_dict = {"fastq": dxpy.dxlink(SAMPLE_FASTQ),
+                  "genomeindex_targz": dxpy.dxlink(HS37D5_BWA_INDEX)}
+
+    job = applet.run(input_dict, instance_type="mem1_ssd1_x16",
+                         folder=folder, project=project_id)
+
+    job.wait_on_done()
+    
+    output_bam_dxfile = dxpy.DXFile(job.describe()["output"]["bam"])
+    local_filename = os.path.join(tmpdir.strpath, "test.bam")
+    dxpy.download_dxfile(output_bam_dxfile.get_id(),
+                         local_filename)
+    count_alignments_cmd = "samtools view {bam} | wc -l".format(
+        bam=local_filename)
+    num_alignments = int(subprocess.check_output(count_alignments_cmd,
+                                                 shell=True))
+    assert num_alignments == 1951476
