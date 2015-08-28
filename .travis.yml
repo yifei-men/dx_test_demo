@@ -1,14 +1,9 @@
 language: python
 python:
   - 2.7
-sudo: false
-addons:
-  apt:
-    pacakges:
-      - samtools
 install:
   - pip install pytest
-  - export TZ=Americas/Los_Angeles
+  - sudo apt-get install samtools
 script:
 - wget https://wiki.dnanexus.com/images/files/dx-toolkit-current-ubuntu-12.04-amd64.tar.gz
 - tar zxf dx-toolkit-current-ubuntu-12.04-amd64.tar.gz
