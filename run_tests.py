@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 """Run pytest tests on applets found in the pwd."""
 import argparse
+import json
 import os
 import re
 import subprocess
@@ -79,6 +80,58 @@ def run_test(applet_dir, project_id):
 
     return returncode
 
+def run_static_analyzer(applet_dir):
+    """Run a static analyzer, pylint or shellcheck, on the source file of
+    the given applet.
+    """
+    dxapp_json = json.load(open(os.path.join(applet_dir, 'dxapp.json')))
+    interpreter = dxapp_json['runSpec']['interpreter']
+    source_file = os.path.join(applet_dir, dxapp_json['runSpec']['file'])
+
+    if interpreter.startswith("python"): # Handle python2.7, etc.
+        run_pylint(source_file)
+    elif interpreter == 'bash':
+        input_names = [str(e['name']) for e in dxapp_json['inputSpec']]
+        run_shellcheck(source_file, input_names)
+
+def run_pylint(source_file):
+    """Run pylint on the source file."""
+    pylint_cmd = ['pylint', source_file]
+    # Disable heresies
+    pylint_cmd.append("--disable=W0141,W0142")
+
+    proc = subprocess.Popen(pylint_cmd, stdout=subprocess.PIPE)
+    stdout, stderr = proc.communicate()
+    print stdout
+
+def run_shellcheck(source_file, supplied_inputs=None):
+    """Run shellcheck on the source file.
+
+    If supplied_inputs is specified, "referenced but not assigned errors" for those
+    variables will be suppressed.
+    """
+    shellcheck_cmd = ["shellcheck", '--format', 'gcc', source_file]
+
+    proc = subprocess.Popen(shellcheck_cmd, stdout=subprocess.PIPE)
+    stdout, stderr = proc.communicate()
+    shellcheck_results = filter(None, stdout.split("\n"))
+
+    # Shellcheck will complain about variables that are referenced but not
+    # assigned. But some of those are inputs from dxapp.json. So we will filter
+    # those out to reduce spurious errors.
+    cleaned_results = []
+    for result in shellcheck_results:
+        if "[SC2154]" in result: # Is a referenced but not assigned error
+            missing_name = re.search(
+                "(?<=warning: )\w+(?= is referenced but not assigned)", result).group()
+            if supplied_inputs and missing_name not in supplied_inputs:
+                cleaned_results.append(result)
+        else:
+            cleaned_results.append(result)
+
+    for result in cleaned_results:
+        print result.strip()
+
 def main():
     """Main entry point for the script."""
     parser = argparse.ArgumentParser()
@@ -104,6 +157,7 @@ def main():
 
     returncodes = []
     for applet_dir in applet_dirs:
+        run_static_analyzer(applet_dir)
         returncode = run_test(applet_dir, args.project_id)
         returncodes.append(returncode)
 
