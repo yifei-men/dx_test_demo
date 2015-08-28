@@ -52,6 +52,10 @@ def get_revision_tag():
     commit hash of HEAD.
     """
 
+    # Use a consistent time zone when naming folders
+    os.environ["TZ"] = "America/Los_Angeles"
+    time.tzset()
+
     date_string = time.strftime("%Y-%m-%d-%H.%M.%S")
     try:
         git_revision = subprocess.check_output(["git", "rev-parse", "HEAD"]).strip()
