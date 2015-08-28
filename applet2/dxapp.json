@@ -1,0 +1,33 @@
+{
+  "name": "applet2",
+  "title": "Applet Two",
+  "summary": "applet2",
+  "dxapi": "1.0.0",
+  "version": "0.0.1",
+  "categories": [],
+  "inputSpec": [
+    {
+      "name": "fastq",
+      "label": "FASTQ",
+      "class": "file",
+      "optional": false
+    },
+    {
+      "name": "genomeindex_targz",
+      "label": "Genome index",
+      "class": "file"
+    }
+  ],
+  "outputSpec": [
+    {
+      "name": "bam",
+      "label": "BAM",
+      "class": "file"
+    }
+  ],
+  "runSpec": {
+    "interpreter": "python2.7",
+    "file": "src/applet2.py"
+  },
+  "authorizedUsers": []
+}
