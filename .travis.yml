@@ -4,6 +4,9 @@ python:
 install:
   - pip install pytest
   - sudo apt-get install samtools
+  - sudo apt-get install pylint
+  - wget http://ftp.debian.org/debian/pool/main/s/shellcheck/shellcheck_0.3.7-1_amd64.deb
+  - sudo dkpg -i shellcheck_0.3.7-1_amd64.deb
 script:
 - wget https://wiki.dnanexus.com/images/files/dx-toolkit-current-ubuntu-12.04-amd64.tar.gz
 - tar zxf dx-toolkit-current-ubuntu-12.04-amd64.tar.gz
