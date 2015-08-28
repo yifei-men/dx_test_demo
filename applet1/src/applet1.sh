@@ -3,7 +3,7 @@
 set -e -x -o pipefail
 
 main() {
-    sleep 2
+    sleep 1
     dx download "$fastq" -o input.fastq
     mkdir genome
     dx cat "$genomeindex_targz" | tar zxvf - -C genome
