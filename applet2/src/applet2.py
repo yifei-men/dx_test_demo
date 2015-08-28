@@ -11,6 +11,7 @@ import dxpy
 @dxpy.entry_point('main')
 def main(fastq, genomeindex_targz):
 
+    print "something"
     fastq_dxfile = dxpy.DXFile(fastq)
     dxpy.download_dxfile(fastq_dxfile.get_id(), "input.fastq")
 
