@@ -5,7 +5,6 @@ install:
   - pip install pytest
   - sudo apt-get install samtools
 script:
-- deactivate
 - wget https://wiki.dnanexus.com/images/files/dx-toolkit-current-ubuntu-12.04-amd64.tar.gz
 - tar zxf dx-toolkit-current-ubuntu-12.04-amd64.tar.gz
 - source dx-toolkit/environment
