@@ -23,7 +23,7 @@ def main(fastq, genomeindex_targz):
     genome_file = glob.glob("genome/*.bwt")[0]
     genome_file = re.sub("\.bwt$", "", genome_file)
 
-    bwa_cmd = ("bwa mem -t {nproc} {genome} {fastq} | "
+    bwa_cmd = ("nwa mem -t {nproc} {genome} {fastq} | "
                "samtools view -u -S - | "
                "samtools sort -m 256M -@ {nproc} - output"
                .format(nproc=multiprocessing.cpu_count(),
