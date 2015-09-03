@@ -8,7 +8,7 @@ Status](https://travis-ci.org/mckinsel/dx_test_demo.svg?branch=master)](https://
 ### Testing a single applet
 
 Each applet has a `test` directory that contains functional tests for the
-applet. The tests can be run using [pytest](www.pytest.org).
+applet. The tests can be run using [pytest](http://www.pytest.org).
 
 For example,
 
