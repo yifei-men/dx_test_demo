@@ -77,7 +77,7 @@ def pytest_addoption(parser):
     parser.addoption("--project_id", action="store", default=None)
     parser.addoption("--folder", action="store", default=None)
 
-@pytest.fixture
+@pytest.fixture(scope="session")
 def applet_id(request):
     """applet_id is the applet that will be run. If it's not
     specified, then the applet will be built in the project
@@ -116,7 +116,7 @@ def project_id(request):
 
     return id_
 
-@pytest.fixture
+@pytest.fixture(scope="session")
 def folder(request):
     """This is the folder in which the tests should be run and applet
     built.
