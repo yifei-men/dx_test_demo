@@ -10,7 +10,7 @@ main() {
     genome_file=`ls genome/*.bwt`
     genome_file="${genome_file%.bwt}"
 
-    bwa mem -t `nproc` "$genome_file" input.fastq | samtools view -u -S - | samtools sort -m 256M -@ `nproc` - output
+    bwa mem -t `nproc` -T 35 -O 3 "$genome_file" input.fastq | samtools view -u -S - | samtools sort -m 256M -@ `nproc` - output
 
     bam=$(dx upload output.bam --brief)
 
