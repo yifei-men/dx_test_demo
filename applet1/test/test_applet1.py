@@ -1,8 +1,10 @@
-import json
 import os
 import subprocess
+import time
 
 import dxpy
+
+import keen
 
 # These files are stored in the test project.
 SAMPLE_FASTQ = "file-BQbXKk80fPFj4Jbfpxb6Ffv2"
@@ -23,11 +25,13 @@ def test_alignment_count(applet_id, project_id, folder, tmpdir):
     input_dict = {"fastq": dxpy.dxlink(SAMPLE_FASTQ),
                   "genomeindex_targz": dxpy.dxlink(HS37D5_BWA_INDEX)}
 
+    start_time = time.time()
     job = applet.run(input_dict, instance_type="mem1_ssd1_x16",
-                         folder=folder, project=project_id)
-
+                     folder=folder, project=project_id)
     job.wait_on_done()
-    
+    end_time = time.time()
+    elapsed_time = end_time - start_time
+
     output_bam_dxfile = dxpy.DXFile(job.describe()["output"]["bam"])
     local_filename = os.path.join(tmpdir.strpath, "test.bam")
     dxpy.download_dxfile(output_bam_dxfile.get_id(),
@@ -36,4 +40,6 @@ def test_alignment_count(applet_id, project_id, folder, tmpdir):
         bam=local_filename)
     num_alignments = int(subprocess.check_output(count_alignments_cmd,
                                                  shell=True))
-    assert num_alignments == 1951476
+    keen.add_event("applet1_tests", {"num_alignments": num_alignments,
+                                     "running_time": elapsed_time})
+    assert job.describe()['state'] == 'done'
